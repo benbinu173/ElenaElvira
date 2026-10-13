@@ -1,0 +1,128 @@
+.compare__frame {
+  --pos: 50%;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: var(--r-panel);
+  background: var(--ink-700);
+  box-shadow: var(--shadow-panel);
+}
+
+.compare__frame:focus-within {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
+}
+
+.compare__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The recent photograph sits on top, clipped to the right of the divider. */
+.compare__image--over {
+  clip-path: inset(0 0 0 var(--pos));
+}
+
+.compare__handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--pos);
+  width: 2px;
+  margin-left: -1px;
+  background: rgba(251, 243, 231, 0.92);
+  box-shadow: 0 0 26px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+}
+
+.compare__knob {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: rgba(251, 243, 231, 0.95);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.55);
+}
+
+/* A drag grip made of two rules, rather than an icon. */
+.compare__knob i {
+  display: block;
+  width: 2px;
+  height: 15px;
+  border-radius: 2px;
+  background: rgba(42, 34, 51, 0.72);
+}
+
+/* The real control. Invisible, but it owns the drag, the touch and the keys. */
+.compare__range {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  cursor: ew-resize;
+  /* Horizontal drags belong to the handle; vertical ones belong to the page.
+
+     Without this the invisible input swallows every gesture that starts on the
+     frame, so on a phone the picture becomes a patch of the screen a thumb
+     cannot scroll past — you push up and nothing moves, and the only way on is
+     to start the swipe somewhere else. */
+  touch-action: pan-y;
+}
+
+.compare__range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 52px;
+  height: 100%;
+  cursor: ew-resize;
+}
+
+.compare__range::-moz-range-thumb {
+  width: 52px;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  cursor: ew-resize;
+}
+
+.compare__range:focus {
+  outline: none;
+}
+
+.compare__legend {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.2rem;
+}
+
+.compare__legend-item {
+  font-size: clamp(1.15rem, 1.8vw, 1.5rem);
+  color: var(--muted);
+}
+
+@media (max-width: 640px) {
+  .compare__frame {
+    aspect-ratio: 1 / 1;
+  }
+
+  .compare__knob {
+    width: 40px;
+    height: 40px;
+  }
+}

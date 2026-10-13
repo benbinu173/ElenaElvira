@@ -1,0 +1,256 @@
+.candles {
+  background: linear-gradient(180deg, transparent, var(--ink-800) 45%, transparent);
+}
+
+.candles__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.candles__head {
+  align-self: stretch;
+}
+
+.candles__pair {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: clamp(3.5rem, 14vw, 9rem);
+  padding-top: clamp(3.5rem, 10vh, 6rem);
+}
+
+/* --------------------------------------------------------------------------
+   A candle is a button: the whole thing is the tap target, not just the flame.
+   -------------------------------------------------------------------------- */
+.candle {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  border-radius: var(--r-panel);
+  background: none;
+  transition: transform 0.5s var(--ease-out);
+}
+
+.candle:hover {
+  transform: translateY(-4px);
+}
+
+.candle[data-lit='false'] {
+  cursor: default;
+  transform: none;
+}
+
+.candle__flame-wrap {
+  position: relative;
+  display: block;
+  width: 56px;
+  height: 78px;
+  margin-bottom: -2px;
+}
+
+.candle__glow {
+  position: absolute;
+  left: 50%;
+  bottom: -14px;
+  width: 150px;
+  height: 150px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.7s var(--ease-out);
+  pointer-events: none;
+}
+
+.candle--gold .candle__glow {
+  background: radial-gradient(circle, rgba(240, 194, 123, 0.4), transparent 62%);
+}
+
+.candle--rose .candle__glow {
+  background: radial-gradient(circle, rgba(233, 160, 168, 0.38), transparent 62%);
+}
+
+.candle[data-lit='true'] .candle__glow {
+  opacity: 1;
+}
+
+.candle__flame {
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  width: 19px;
+  height: 33px;
+  margin-left: -9.5px;
+  border-radius: 50% 50% 50% 50% / 72% 72% 28% 28%;
+  transform-origin: 50% 100%;
+  background: radial-gradient(
+    circle at 50% 76%,
+    #fffaf0 0%,
+    #ffdf9c 34%,
+    #f2a63f 68%,
+    rgba(214, 122, 40, 0) 100%
+  );
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .candle[data-lit='true'] .candle__flame {
+    animation: flame-flicker 1.5s ease-in-out infinite;
+  }
+}
+
+/* The flicker is small on purpose: a candle, not a campfire. */
+@keyframes flame-flicker {
+  0%,
+  100% {
+    transform: scale(1, 1) rotate(0deg);
+  }
+  22% {
+    transform: scale(0.93, 1.1) rotate(-2.6deg);
+  }
+  47% {
+    transform: scale(1.06, 0.93) rotate(1.8deg);
+  }
+  71% {
+    transform: scale(0.95, 1.06) rotate(-1.2deg);
+  }
+}
+
+.candle[data-lit='false'] .candle__flame {
+  opacity: 0;
+  transform: scale(0.4);
+}
+
+/* Smoke only exists in the moment after the flame goes. */
+.candle__smoke {
+  position: absolute;
+  left: 50%;
+  bottom: 40px;
+  display: block;
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+
+.candle[data-lit='false'] .candle__smoke {
+  animation: smoke-fade 3s ease-out forwards;
+}
+
+.candle__smoke i {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  display: block;
+  width: 11px;
+  height: 11px;
+  margin-left: -5.5px;
+  border-radius: 50%;
+  background: rgba(255, 250, 240, 0.4);
+  filter: blur(5px);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .candle[data-lit='false'] .candle__smoke i {
+    animation: smoke-rise 2.8s ease-out forwards;
+  }
+
+  .candle[data-lit='false'] .candle__smoke i:nth-child(2) {
+    animation-delay: 0.25s;
+  }
+
+  .candle[data-lit='false'] .candle__smoke i:nth-child(3) {
+    animation-delay: 0.5s;
+  }
+}
+
+@keyframes smoke-rise {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.5);
+  }
+  18% {
+    opacity: 0.55;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(14px, -78px) scale(2.6);
+  }
+}
+
+@keyframes smoke-fade {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  1%,
+  90% {
+    opacity: 1;
+  }
+}
+
+.candle__wick {
+  width: 2px;
+  height: 9px;
+  background: linear-gradient(180deg, #2b2333, #4a3f52);
+}
+
+.candle__body {
+  width: 46px;
+  height: clamp(110px, 19vh, 172px);
+  border-radius: var(--r-pill) var(--r-pill) var(--r-photo) var(--r-photo);
+  box-shadow: inset -8px 0 18px rgba(0, 0, 0, 0.35), inset 8px 0 18px rgba(0, 0, 0, 0.18);
+}
+
+.candle--gold .candle__body {
+  background: linear-gradient(90deg, #b9843a 0%, var(--gold) 45%, #f7dcae 70%, #b9843a 100%);
+}
+
+.candle--rose .candle__body {
+  background: linear-gradient(90deg, #a95865 0%, var(--rose) 45%, #f6c3c8 70%, #a95865 100%);
+}
+
+.candle__base {
+  width: 86px;
+  height: 9px;
+  margin-top: 2px;
+  border-radius: var(--r-pill);
+  background: linear-gradient(180deg, var(--ink-500), var(--ink-700));
+}
+
+.candle__name {
+  margin-top: 1.1rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2.2vw, 1.75rem);
+  letter-spacing: 0.01em;
+}
+
+.candle--gold .candle__name {
+  color: var(--gold);
+}
+
+.candle--rose .candle__name {
+  color: var(--rose);
+}
+
+.candle[data-lit='false'] .candle__name {
+  color: var(--faint);
+}
+
+.candles__after {
+  min-height: 2.4rem;
+  margin-top: clamp(2.5rem, 7vh, 4rem);
+  font-size: clamp(1.4rem, 3vw, 2.1rem);
+  color: var(--cream);
+  text-align: center;
+}
+
+@media (max-width: 560px) {
+  .candles__pair {
+    gap: clamp(2.5rem, 12vw, 4rem);
+  }
+
+  .candle__body {
+    width: 40px;
+  }
+}

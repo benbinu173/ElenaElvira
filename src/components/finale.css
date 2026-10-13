@@ -1,0 +1,157 @@
+.finale {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, transparent, var(--ink-800) 50%, var(--ink-900));
+}
+
+.finale::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  width: min(90vw, 1000px);
+  height: min(60vh, 620px);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(240, 194, 123, 0.13), rgba(233, 160, 168, 0.09) 45%, transparent 70%);
+  pointer-events: none;
+}
+
+.finale__inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: clamp(1.5rem, 4vh, 2.5rem);
+}
+
+.finale__wish {
+  font-size: clamp(2.4rem, 7vw, 5.2rem);
+  font-style: italic;
+  color: var(--cream);
+}
+
+.finale__names {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(0.75rem, 2.5vw, 2rem);
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.6rem, 9.5vw, 7.5rem);
+  line-height: 1.05;
+  letter-spacing: 0.02em;
+}
+
+.finale__word {
+  display: inline-flex;
+  align-items: center;
+}
+
+.finale__word--gold .finale__letter {
+  color: var(--gold);
+}
+
+.finale__word--rose .finale__letter {
+  color: var(--rose);
+}
+
+.finale__letter {
+  display: inline-block;
+  padding: 0;
+  border-radius: var(--r-photo);
+  cursor: pointer;
+  user-select: none;
+  will-change: transform;
+  transition: transform 0.28s var(--ease-out), opacity 0.28s var(--ease-out);
+}
+
+.finale__letter:hover {
+  transform: translateY(-9px) scale(1.08);
+}
+
+.finale__letter[data-popped='true'] {
+  opacity: 0;
+  transform: scale(0.35);
+  pointer-events: none;
+}
+
+.finale__letter-inner {
+  display: inline-block;
+}
+
+/* Letters bob out of phase so the word breathes rather than marching. */
+@media (prefers-reduced-motion: no-preference) {
+  .finale__letter-inner {
+    animation: letter-float 4.4s ease-in-out infinite;
+  }
+
+  .finale__letter:nth-child(2) .finale__letter-inner {
+    animation-delay: -0.85s;
+  }
+
+  .finale__letter:nth-child(3) .finale__letter-inner {
+    animation-delay: -1.7s;
+  }
+
+  .finale__letter:nth-child(4) .finale__letter-inner {
+    animation-delay: -2.55s;
+  }
+
+  .finale__letter:nth-child(5) .finale__letter-inner {
+    animation-delay: -3.4s;
+  }
+}
+
+@keyframes letter-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-11px) rotate(-1.2deg);
+  }
+}
+
+.finale__amp {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--faint);
+  font-size: 0.72em;
+}
+
+.finale__note {
+  max-width: 46ch;
+  font-size: clamp(1rem, 1.5vw, 1.15rem);
+  line-height: 1.8;
+  color: var(--muted);
+  text-wrap: balance;
+}
+
+.finale__again {
+  margin-top: 0.5rem;
+}
+
+.finale__hint {
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+@media (max-width: 640px) {
+  .finale__names {
+    gap: 0.5rem 1rem;
+  }
+
+  /* The two names and the ampersand will not sit on one phone line, so the
+     words wrap. A word itself must not, though, or a name would break across
+     two lines in the middle of itself. */
+  .finale__word {
+    flex-wrap: nowrap;
+  }
+}

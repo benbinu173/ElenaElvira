@@ -1,0 +1,270 @@
+.notes__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 22rem) minmax(0, 1fr);
+  gap: clamp(2.5rem, 6vw, 5rem);
+  align-items: start;
+}
+
+/* --------------------------------------------------------------------------
+   Form
+   -------------------------------------------------------------------------- */
+.notes__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  border-radius: var(--r-panel);
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(31, 24, 44, 0.75), rgba(23, 18, 33, 0.55));
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.field label {
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border-radius: var(--r-panel);
+  border: 1px solid var(--line);
+  background: var(--ink-900);
+  color: var(--cream);
+  /* Exactly 16px, not a hair under it. iOS Safari zooms the whole page in when
+     it focuses a field whose font-size is below 16px, and it does not zoom
+     back out afterwards, so the visitor is stranded on a page that is suddenly
+     too big for the screen. */
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 1.6;
+  resize: vertical;
+  transition: border-color 0.35s var(--ease-out);
+}
+
+.field textarea {
+  min-height: 7rem;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: var(--faint);
+}
+
+.field input:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+
+.field__help,
+.field__error {
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.field__help {
+  color: var(--faint);
+}
+
+.field__error {
+  color: var(--rose);
+}
+
+/* --------------------------------------------------------------------------
+   Send it instead.
+
+   Sits under the submit button and only appears once there is something to
+   send. Deliberately quieter than the button above it: pinning is the easy
+   gesture, and this is the one that actually reaches them.
+   -------------------------------------------------------------------------- */
+.notes__send {
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+}
+
+.notes__send-label {
+  margin-bottom: 0.85rem;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--faint);
+}
+
+.notes__send-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.notes__send-link {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.6rem 1.1rem;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line-strong);
+  color: var(--cream);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: color 0.35s var(--ease-out), border-color 0.35s var(--ease-out);
+}
+
+.notes__send-link:hover {
+  color: var(--gold);
+  border-color: var(--gold);
+}
+
+/* --------------------------------------------------------------------------
+   Board
+   -------------------------------------------------------------------------- */
+.notes__board {
+  min-height: 14rem;
+}
+
+.notes__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  columns: 3;
+  column-gap: clamp(1rem, 2vw, 1.75rem);
+}
+
+.note {
+  position: relative;
+  break-inside: avoid;
+  margin-bottom: clamp(1rem, 2.5vw, 1.75rem);
+  padding: 1.6rem 1.35rem 1.15rem;
+  border-radius: var(--r-photo);
+  background: linear-gradient(180deg, var(--paper), var(--paper-2));
+  box-shadow: 0 20px 44px -20px rgba(4, 2, 8, 0.9), 0 2px 8px rgba(4, 2, 8, 0.5);
+  transform: rotate(var(--tilt));
+  transition: transform 0.5s var(--ease-out), box-shadow 0.5s var(--ease-out);
+}
+
+.note:hover,
+.note:focus-within {
+  transform: rotate(0deg) translateY(-4px);
+  box-shadow: 0 30px 60px -22px rgba(4, 2, 8, 0.95), 0 4px 12px rgba(4, 2, 8, 0.55);
+}
+
+.note__pin {
+  position: absolute;
+  top: 0.55rem;
+  left: 50%;
+  width: 9px;
+  height: 9px;
+  margin-left: -4.5px;
+  border-radius: 50%;
+  background: var(--gold-deep);
+  box-shadow: 0 1px 3px rgba(4, 2, 8, 0.5);
+}
+
+.note__text {
+  font-size: 1.3rem;
+  line-height: 1.35;
+  color: var(--paper-ink);
+  overflow-wrap: anywhere;
+}
+
+.note__from {
+  margin-top: 0.9rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--paper-ink-soft);
+}
+
+.note__remove {
+  position: absolute;
+  right: 0.6rem;
+  bottom: 0.5rem;
+  padding: 0.2rem 0.4rem;
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--paper-ink-soft);
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-out), color 0.3s var(--ease-out);
+}
+
+.note:hover .note__remove,
+.note:focus-within .note__remove {
+  opacity: 1;
+}
+
+.note__remove:hover {
+  color: #8a3b48;
+}
+
+.note__remove:focus-visible {
+  opacity: 1;
+  outline-color: var(--paper-ink);
+}
+
+/* Empty state: composed, not an apology. */
+.notes__empty {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  justify-content: center;
+  min-height: 14rem;
+  padding: clamp(2rem, 4vw, 3rem);
+  border-radius: var(--r-panel);
+  border: 1px dashed var(--line-strong);
+  text-align: center;
+}
+
+.notes__empty-title {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  color: var(--muted);
+}
+
+.notes__empty-body {
+  margin-inline: auto;
+  max-width: 34ch;
+  font-size: 0.95rem;
+  color: var(--faint);
+  line-height: 1.7;
+}
+
+@media (max-width: 1000px) {
+  .notes__layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .notes__list {
+    columns: 2;
+  }
+}
+
+@media (max-width: 560px) {
+  .notes__list {
+    columns: 1;
+  }
+
+  .note {
+    transform: none;
+  }
+}
+
+/* Keyed off the pointer rather than the width. A tablet is wide enough to skip
+   every phone breakpoint and still has no hover, which would leave the only
+   control that deletes a note permanently invisible on it. Padding here is
+   partly the tap target and partly a nudge: the text sits at the note's lower
+   right, which is where a thumb already is. */
+@media (hover: none) {
+  .note__remove {
+    opacity: 1;
+    padding: 0.5rem 0.55rem;
+  }
+}

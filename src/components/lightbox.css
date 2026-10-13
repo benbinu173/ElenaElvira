@@ -1,0 +1,139 @@
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  display: grid;
+  place-items: center;
+  /* The insets are added rather than replaced, so the breathing room is still
+     there on top of whatever the phone reserves for itself. */
+  padding: calc(clamp(3.5rem, 9vh, 6rem) + var(--safe-top))
+    calc(clamp(1rem, 5vw, 5rem) + var(--safe-right))
+    calc(clamp(3.5rem, 9vh, 6rem) + var(--safe-bottom))
+    calc(clamp(1rem, 5vw, 5rem) + var(--safe-left));
+}
+
+.lightbox__scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(6, 4, 10, 0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.lightbox__stage {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.lightbox__figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.1rem;
+  margin: 0;
+}
+
+.lightbox__figure img {
+  max-width: min(92vw, 1120px);
+  max-height: 74vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: var(--r-photo);
+  box-shadow: 0 50px 120px -30px rgba(0, 0, 0, 0.95);
+}
+
+.lightbox__caption {
+  font-size: clamp(1.25rem, 2.4vw, 1.75rem);
+  color: var(--cream);
+  text-align: center;
+  max-width: 30ch;
+}
+
+/* Shared treatment for the overlay's controls. Scrim-backed so the label keeps
+   its contrast no matter what photograph is behind it. */
+.dark-ui {
+  position: absolute;
+  z-index: 2;
+  padding: 0.6rem 1.15rem;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line-strong);
+  background: rgba(16, 12, 24, 0.78);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--cream);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: color 0.35s var(--ease-out), border-color 0.35s var(--ease-out);
+}
+
+.dark-ui:hover {
+  color: var(--gold);
+  border-color: var(--gold);
+}
+
+/* Same trick as the sound switch: the label stays small, the target does not.
+   Invisible, so it costs nothing visually, and it keeps "Close" reachable
+   without turning it into a slab across the corner of the photograph. */
+@media (hover: none) {
+  .dark-ui::after {
+    content: '';
+    position: absolute;
+    inset: -8px;
+  }
+}
+
+.lightbox__close {
+  top: calc(clamp(1rem, 3vh, 2rem) + var(--safe-top));
+  right: calc(clamp(1rem, 3vw, 2rem) + var(--safe-right));
+}
+
+.lightbox__nav {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.lightbox__nav--prev {
+  left: clamp(0.75rem, 2.5vw, 2rem);
+}
+
+.lightbox__nav--next {
+  right: clamp(0.75rem, 2.5vw, 2rem);
+}
+
+@media (max-width: 760px) {
+  .lightbox {
+    padding-block: calc(clamp(4rem, 13vh, 6rem) + var(--safe-top))
+      calc(clamp(6.5rem, 17vh, 8rem) + var(--safe-bottom));
+  }
+
+  .lightbox__figure img {
+    max-height: 58vh;
+  }
+
+  /* Side buttons would sit on top of the photograph at this width, so they
+     move down to the bottom corners.
+
+     Anchored to the edges rather than centred with negative margins, which is
+     what they used to do. "Previous" is about 110px wide at this size, and
+     hanging both off the centre line left their inner edges overlapping. The
+     corners are also where a thumb already is. */
+  .lightbox__nav {
+    top: auto;
+    bottom: calc(clamp(1.1rem, 3vh, 2rem) + var(--safe-bottom));
+    transform: none;
+  }
+
+  .lightbox__nav--prev {
+    left: calc(clamp(0.75rem, 2.5vw, 2rem) + var(--safe-left));
+  }
+
+  .lightbox__nav--next {
+    right: calc(clamp(0.75rem, 2.5vw, 2rem) + var(--safe-right));
+  }
+}

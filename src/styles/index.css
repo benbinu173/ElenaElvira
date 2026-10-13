@@ -1,0 +1,461 @@
+/* ==========================================================================
+   Elena & Elvira - design tokens
+   --------------------------------------------------------------------------
+   One theme, locked. Every surface on this page is warm-dark; sections shift
+   tone (ink-900 -> ink-700) but never invert to light. Photo paper and note
+   paper are the only genuinely light surfaces, and they are meant to read as
+   physical objects resting on the dark.
+   ========================================================================== */
+
+:root {
+  /* Surfaces, darkest to lightest */
+  --ink-900: #0a0810;
+  --ink-800: #100c18;
+  --ink-700: #171221;
+  --ink-600: #1f182c;
+  --ink-500: #2a2138;
+
+  /* The only light surfaces: printed photo paper and sticky notes */
+  --paper: #f6ecd9;
+  --paper-2: #eddfc6;
+  --paper-ink: #2a2233;
+  --paper-ink-soft: #5c5266;
+
+  /* Text on dark */
+  --cream: #fbf3e7;
+  --muted: #b4a8c0;
+  --faint: #8a7f98;
+
+  /* Accents. Elena is gold, Elvira is rose. Nothing else competes with them. */
+  --gold: #f0c27b;
+  --gold-deep: #c8933f;
+  --rose: #e9a0a8;
+  --rose-deep: #c46f7c;
+
+  --line: rgba(251, 243, 231, 0.12);
+  --line-strong: rgba(251, 243, 231, 0.24);
+
+  /* ---------------------------------------------------------------------
+     Corner radius, locked to three documented roles:
+       photos and paper notes -> printed matter, sharp
+       panels, frames, inputs -> soft
+       buttons and chips      -> pill
+     Nothing on the page uses a radius outside these three.
+     --------------------------------------------------------------------- */
+  --r-photo: 3px;
+  --r-panel: 20px;
+  --r-pill: 999px;
+
+  /* Elevation, tinted to the surface hue rather than pure black */
+  --shadow-photo: 0 24px 60px -18px rgba(4, 2, 8, 0.92), 0 2px 10px rgba(4, 2, 8, 0.6);
+  --shadow-panel: 0 30px 80px -30px rgba(4, 2, 8, 0.9);
+
+  /* ---------------------------------------------------------------------
+     Z-index scale. Every layer on the page comes from this list.
+     --------------------------------------------------------------------- */
+  --z-behind: 0;     /* ambient canvas */
+  --z-content: 1;    /* everything you read */
+  --z-sticky: 20;    /* pinned scroll sections */
+  --z-sparkle: 40;   /* click sparkles */
+  --z-confetti: 50;  /* confetti canvas */
+  --z-grain: 55;     /* film grain */
+  --z-overlay: 60;   /* preloader, lightbox */
+
+  --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Outfit', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-hand: 'Caveat', 'Segoe Script', cursive;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+
+  --shell: 1240px;
+  --gutter: clamp(1.25rem, 4vw, 3.5rem);
+
+  /* ---------------------------------------------------------------------
+     Safe areas.
+
+     index.html sets viewport-fit=cover, which lets the page paint into the
+     notch and behind the home indicator on a modern phone. The trade is that
+     anything pinned to an edge has to keep itself clear of them by hand.
+     Each of these resolves to 0px on a device that reports no inset, so none
+     of the rules below need a media query to guard them.
+     --------------------------------------------------------------------- */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+}
+
+/* ==========================================================================
+   Reset
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--ink-900);
+  color: var(--cream);
+  font-family: var(--font-sans);
+  font-weight: 300;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+input,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+h1,
+h2,
+h3,
+p,
+figure,
+blockquote {
+  margin: 0;
+}
+
+::selection {
+  background: var(--gold);
+  color: var(--ink-900);
+}
+
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Scrollbar, kept quiet and in-palette */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--ink-500) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--ink-500);
+  border-radius: var(--r-pill);
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ==========================================================================
+   Layers that sit over the whole document
+   ========================================================================== */
+
+/* Film grain. Fixed and pointer-events-none only, so it never repaints while
+   the page scrolls. */
+.grain {
+  position: fixed;
+  inset: -60px;
+  z-index: var(--z-grain);
+  pointer-events: none;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .grain {
+    animation: grain-drift 7s steps(7) infinite;
+  }
+}
+
+@keyframes grain-drift {
+  0% { transform: translate3d(0, 0, 0); }
+  14% { transform: translate3d(-14px, 8px, 0); }
+  28% { transform: translate3d(10px, -12px, 0); }
+  42% { transform: translate3d(-8px, 14px, 0); }
+  56% { transform: translate3d(16px, 6px, 0); }
+  70% { transform: translate3d(-12px, -8px, 0); }
+  84% { transform: translate3d(6px, 12px, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+
+/* Two very wide, very soft light sources. They give the dark a temperature. */
+.glow-field {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-behind);
+  pointer-events: none;
+  background:
+    radial-gradient(70vw 60vh at 12% -10%, rgba(200, 147, 63, 0.16), transparent 62%),
+    radial-gradient(60vw 55vh at 92% 12%, rgba(196, 111, 124, 0.14), transparent 60%),
+    radial-gradient(90vw 70vh at 50% 108%, rgba(126, 106, 176, 0.14), transparent 66%);
+}
+
+/* --------------------------------------------------------------------------
+   The hour, from src/lib/daylight.js. Written onto <html> as data-phase.
+
+   The base rule above is the dusk palette, so the page looks as designed if
+   the attribute never arrives. Each phase moves only temperature and
+   strength: gold and rose survive all four, which is what keeps it reading as
+   one room lit differently rather than four different sites.
+   -------------------------------------------------------------------------- */
+
+/* After dark, and most of the night. Coolest, and the gold is down to an ember. */
+:root[data-phase='night'] .glow-field {
+  background:
+    radial-gradient(70vw 60vh at 12% -10%, rgba(126, 106, 176, 0.20), transparent 64%),
+    radial-gradient(60vw 55vh at 92% 12%, rgba(96, 112, 190, 0.16), transparent 62%),
+    radial-gradient(90vw 70vh at 50% 108%, rgba(200, 147, 63, 0.10), transparent 68%);
+}
+
+/* First light. Rose takes over from the gold entirely. */
+:root[data-phase='dawn'] .glow-field {
+  background:
+    radial-gradient(70vw 60vh at 10% -8%, rgba(233, 160, 168, 0.26), transparent 64%),
+    radial-gradient(60vw 55vh at 92% 10%, rgba(240, 194, 123, 0.16), transparent 62%),
+    radial-gradient(90vw 70vh at 50% 108%, rgba(126, 106, 176, 0.10), transparent 68%);
+}
+
+/* Daylight. Brightest and most even, and the least moody of the four. */
+:root[data-phase='day'] .glow-field {
+  background:
+    radial-gradient(70vw 60vh at 12% -14%, rgba(240, 194, 123, 0.20), transparent 66%),
+    radial-gradient(60vw 55vh at 92% 6%, rgba(240, 194, 123, 0.14), transparent 64%),
+    radial-gradient(90vw 70vh at 50% 110%, rgba(196, 111, 124, 0.10), transparent 70%);
+}
+
+/* Golden hour. The richest of the four, and the closest to the base rule. */
+:root[data-phase='dusk'] .glow-field {
+  background:
+    radial-gradient(70vw 60vh at 12% -10%, rgba(240, 194, 123, 0.22), transparent 62%),
+    radial-gradient(60vw 55vh at 92% 12%, rgba(196, 111, 124, 0.18), transparent 60%),
+    radial-gradient(90vw 70vh at 50% 108%, rgba(126, 106, 176, 0.16), transparent 66%);
+}
+
+/* Ambient drifting particles, drawn to a canvas by AmbientParticles.jsx */
+.ambient-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-behind);
+  pointer-events: none;
+}
+
+.confetti-layer {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-confetti);
+  pointer-events: none;
+}
+
+main {
+  position: relative;
+  z-index: var(--z-content);
+}
+
+/* ==========================================================================
+   Entrance animation contract
+   --------------------------------------------------------------------------
+   Elements that animate in are hidden by CSS only once JS has taken over, so
+   a failed bundle degrades to a plain, readable page instead of a blank one.
+   ========================================================================== */
+
+.js [data-reveal] {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal] {
+    opacity: 1;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* ==========================================================================
+   Shared primitives
+   ========================================================================== */
+
+.shell {
+  width: 100%;
+  max-width: var(--shell);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  position: relative;
+  padding-block: clamp(6rem, 14vh, 11rem);
+}
+
+.eyebrow {
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+}
+
+.hand {
+  font-family: var(--font-hand);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+}
+
+.lede {
+  font-size: clamp(1rem, 1.15vw, 1.1rem);
+  color: var(--muted);
+  max-width: 46ch;
+  line-height: 1.7;
+}
+
+/* Section header: headline stacked over body copy. Never headline-left /
+   explainer-floating-right. */
+.section-head {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: clamp(2.5rem, 6vh, 4.5rem);
+}
+
+.section-head h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2rem, 5vw, 3.6rem);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+
+/* ==========================================================================
+   Buttons. One intent per label across the whole page.
+   ========================================================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.95rem 1.9rem;
+  border-radius: var(--r-pill);
+  font-size: 0.86rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: transform 0.4s var(--ease-out), background-color 0.4s var(--ease-out),
+    color 0.4s var(--ease-out), border-color 0.4s var(--ease-out);
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn--solid {
+  background: var(--gold);
+  color: var(--ink-900);
+  border: 1px solid var(--gold);
+  font-weight: 500;
+}
+
+.btn--solid:hover {
+  background: #f7d59a;
+  border-color: #f7d59a;
+  transform: translateY(-2px);
+}
+
+.btn--ghost {
+  border: 1px solid var(--line-strong);
+  color: var(--cream);
+}
+
+.btn--ghost:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+  transform: translateY(-2px);
+}
+
+/* --------------------------------------------------------------------------
+   Narrow phones.
+
+   "Pin it to the board" measures around 245px at the size above, and inside
+   the notes card on a 320px screen it has only about 232px to live in — the
+   gutter comes off the outside and the card's own padding comes off again.
+   With nowrap it pushes straight out through the side of the panel, and the
+   page's overflow-x: hidden quietly clips the end of the word off. Below this
+   width the label is allowed to break and the button tightens to match.
+   -------------------------------------------------------------------------- */
+@media (max-width: 400px) {
+  .btn {
+    max-width: 100%;
+    padding: 0.9rem 1.25rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    line-height: 1.45;
+    white-space: normal;
+    text-align: center;
+  }
+}
+
+/* ==========================================================================
+   Utility
+   ========================================================================== */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.tone-gold { color: var(--gold); }
+.tone-rose { color: var(--rose); }

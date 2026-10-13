@@ -1,0 +1,5 @@
+# Photos dropped in this folder are picked up automatically.
+#
+# This is the tidier home for them, but it is not the only one: whatever is in
+# ElenaElvi/ at the project root is loaded too, and these take precedence on a
+# name clash. See src/data/photos.js.

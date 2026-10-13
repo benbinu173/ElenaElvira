@@ -1,0 +1,168 @@
+/* Not the ink-800 band the neighbouring sections use. Together sits directly
+   below this one and carries the same band, which would read as one long
+   numeric run rather than two separate moments. This is a spotlight on the
+   number instead, and the next section gets the band back. */
+.turns::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: var(--z-behind);
+  background:
+    radial-gradient(58% 52% at 46% 40%, rgba(240, 194, 123, 0.13), transparent 70%),
+    radial-gradient(46% 46% at 58% 54%, rgba(233, 160, 168, 0.11), transparent 72%);
+}
+
+/* Above the spotlight above it. A positioned element at z-index 0 paints over
+   ordinary in-flow content, so without this the glow would sit on the text. */
+.turns__inner {
+  position: relative;
+  z-index: var(--z-content);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+   The age.
+
+   The two digits are separate elements so they can arrive from opposite sides
+   and meet in the middle. They carry only the horizontal offset, the size and
+   the colour: the gap between them belongs to the parent, so the pair closes
+   up without the two halves ever touching.
+   -------------------------------------------------------------------------- */
+.turns__age {
+  margin: clamp(0.75rem, 2.5vh, 1.75rem) 0 0;
+  font-size: clamp(5.5rem, 22vw, 15rem);
+  line-height: 0.86;
+  letter-spacing: -0.04em;
+}
+
+.turns__digits {
+  display: flex;
+  justify-content: center;
+  gap: 0.04em;
+}
+
+.turns__digit {
+  display: block;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Elena reads gold, Elvira reads rose, and the number is made of one of each. */
+.turns__digit:nth-child(1) {
+  color: var(--gold);
+}
+
+.turns__digit:nth-child(2) {
+  color: var(--rose);
+}
+
+/* Shown only when there is no age to show, so it is a phrase rather than a
+   figure and cannot go stale the way a hard-coded number would. */
+.turns__age--word {
+  font-size: clamp(2.6rem, 10vw, 6.2rem);
+  color: var(--cream);
+  line-height: 1.1;
+}
+
+.turns__hand {
+  margin-top: clamp(0.75rem, 2vh, 1.35rem);
+  font-size: clamp(1.5rem, 3.4vw, 2.6rem);
+  color: var(--cream);
+  /* The standalone rotate property, not transform: this element is also
+     [data-reveal], and revealOnScroll writes an inline transform on it and
+     then clears it. A transform-based rotation would disappear for the length
+     of the tween and snap back at the end. As a separate longhand it is left
+     alone by both. */
+  rotate: -1.6deg;
+}
+
+.turns__lede {
+  margin-top: clamp(1.5rem, 4vh, 2.5rem);
+  max-width: 52ch;
+}
+
+/* --------------------------------------------------------------------------
+   The garland.
+
+   One bulb per year, hung in an arc. Each is dropped by a --sag value worked
+   out in the component, so the row hangs lowest in the middle the way a real
+   string pinned at both ends does. The sag lives on the outer element because
+   GSAP scales the inner one, and a transform written by a tween would wipe out
+   a transform written by CSS.
+   -------------------------------------------------------------------------- */
+.turns__garland {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.55rem, 2.1vw, 1.15rem);
+  width: 100%;
+  margin-top: clamp(2.5rem, 7vh, 4.5rem);
+  /* The sag is a transform, so it takes up no layout height and the middle of
+     the garland would hang over whatever comes next. This reserves the room.
+     Matches SAG in Turns.jsx. */
+  padding-block-end: 1.5rem;
+}
+
+.light {
+  display: block;
+  flex: none;
+  transform: translateY(var(--sag));
+}
+
+.light__bulb {
+  display: block;
+  width: clamp(7px, 1vw, 11px);
+  aspect-ratio: 1;
+  border-radius: var(--r-pill);
+}
+
+.light[data-tone='gold'] .light__bulb {
+  background: var(--gold);
+  box-shadow: 0 0 12px 2px rgba(240, 194, 123, 0.55), 0 0 34px 8px rgba(240, 194, 123, 0.18);
+}
+
+.light[data-tone='rose'] .light__bulb {
+  background: var(--rose);
+  box-shadow: 0 0 12px 2px rgba(233, 160, 168, 0.55), 0 0 34px 8px rgba(233, 160, 168, 0.18);
+}
+
+/* Both the digits and the bulbs start hidden, but only once the bundle has
+   proved it is alive by putting .js on <html>. Same contract as [data-reveal]
+   in index.css, and it fails the same way: with no JavaScript the age and the
+   garland are simply there. */
+.js .turns__digit,
+.js .light__bulb {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .turns__digit,
+  .js .light__bulb {
+    opacity: 1;
+  }
+}
+
+.turns__caption {
+  margin-top: clamp(1rem, 3vh, 1.75rem);
+  font-size: 0.86rem;
+  letter-spacing: 0.02em;
+  color: var(--faint);
+  max-width: 46ch;
+}
+
+/* Narrow screens: the bulbs would be too tight to read as a string of lights,
+   so the gaps close up and the glow does the work. The sizes below keep all
+   twenty-one on one row inside a 280px content box, which is a 320px phone
+   with this page's gutters taken off. */
+@media (max-width: 560px) {
+  .turns__garland {
+    gap: 0.35rem;
+  }
+
+  .light__bulb {
+    width: 6px;
+  }
+}

@@ -1,0 +1,66 @@
+.together {
+  background: linear-gradient(180deg, transparent, var(--ink-800) 50%, transparent);
+}
+
+.together__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.together__eyebrow {
+  margin-bottom: 0.9rem;
+}
+
+.together__title {
+  font-size: clamp(2rem, 5vw, 3.6rem);
+  color: var(--cream);
+  max-width: 24ch;
+  text-wrap: balance;
+}
+
+/* The hero's seam, laid on its side. Gold on the left, rose on the right, and
+   the number running straight through the join. */
+.together__count {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: clamp(0.6rem, 1.6vw, 1.1rem);
+  margin-top: clamp(1rem, 3vh, 2rem);
+  color: var(--gold);
+}
+
+/* Gradient text only where the browser can actually clip it, so the fallback
+   above is a plain gold number rather than an invisible one. */
+@supports (background-clip: text) or (-webkit-background-clip: text) {
+  .together__count {
+    background: linear-gradient(100deg, var(--gold), var(--rose));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+.together__number {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(3.6rem, 13vw, 9rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  /* Fixed-width digits, so counting up does not shove the word "days" around. */
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+}
+
+.together__unit {
+  font-family: var(--font-sans);
+  font-size: clamp(1rem, 2vw, 1.4rem);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.together__note {
+  margin-top: clamp(1.25rem, 3vh, 2rem);
+  max-width: 44ch;
+}

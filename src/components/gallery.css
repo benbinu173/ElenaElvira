@@ -1,0 +1,198 @@
+.wall {
+  position: relative;
+  padding-block-start: clamp(4.5rem, 12vh, 8rem);
+}
+
+.wall__head {
+  padding-bottom: clamp(2rem, 6vh, 4rem);
+}
+
+.wall__pin {
+  position: relative;
+  height: 100dvh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.wall__track {
+  display: flex;
+  align-items: center;
+  gap: clamp(2rem, 5vw, 5.5rem);
+  padding-inline: var(--gutter);
+  will-change: transform;
+}
+
+/* --------------------------------------------------------------------------
+   A print on warm paper. Three radii only on this page, and this is r-photo.
+   -------------------------------------------------------------------------- */
+.postcard {
+  position: relative;
+  flex: none;
+  padding: clamp(9px, 0.9vw, 15px);
+  padding-bottom: 0;
+  border-radius: var(--r-photo);
+  background: linear-gradient(180deg, var(--paper), var(--paper-2));
+  box-shadow: var(--shadow-photo);
+  transform: rotate(var(--tilt)) translateY(var(--lift));
+  transition: transform 0.6s var(--ease-out), box-shadow 0.6s var(--ease-out);
+}
+
+.postcard:hover,
+.postcard:focus-within {
+  transform: rotate(0deg) translateY(calc(var(--lift) - 16px)) scale(1.035);
+  box-shadow: 0 40px 90px -22px rgba(4, 2, 8, 0.95), 0 4px 14px rgba(4, 2, 8, 0.6);
+  z-index: 1;
+}
+
+.postcard__button {
+  position: relative;
+  display: block;
+  padding: 0;
+  border-radius: 1px;
+  overflow: hidden;
+  background: var(--ink-600);
+  cursor: pointer;
+}
+
+.postcard__button img {
+  display: block;
+  height: clamp(180px, 38vh, 380px);
+  width: auto;
+  max-width: none;
+  object-fit: cover;
+  border-radius: 1px;
+  transition: filter 0.6s var(--ease-out);
+  filter: saturate(0.96);
+}
+
+.postcard:hover .postcard__button img {
+  filter: saturate(1.04);
+}
+
+.postcard__caption {
+  padding: 0.85rem 0.4rem 1.05rem;
+  font-size: clamp(1.05rem, 1.5vw, 1.3rem);
+  color: var(--paper-ink);
+  text-align: center;
+  max-width: 22ch;
+  margin-inline: auto;
+}
+
+/* --------------------------------------------------------------------------
+   The print that has not come up yet.
+
+   Sits over the photograph as undeveloped paper and is faded out by GSAP while
+   the card is held. Only ever rendered on a hover-capable pointer and never
+   without JavaScript, so there is no path where it covers a photograph the
+   visitor cannot get back.
+   -------------------------------------------------------------------------- */
+.postcard__blank {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  border-radius: 1px;
+  background:
+    radial-gradient(120% 90% at 30% 12%, rgba(255, 255, 255, 0.55), transparent 60%),
+    linear-gradient(180deg, #f7f1e2, #e9dcc2);
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.postcard__blank-hint {
+  font-family: var(--font-sans);
+  font-size: 0.66rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--paper-ink-soft);
+  opacity: 0.85;
+  text-align: center;
+}
+
+/* Scroll affordance for the horizontal pan. */
+.wall__rail {
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: clamp(1.75rem, 5vh, 3.25rem);
+  height: 1px;
+  background: var(--line);
+  overflow: hidden;
+}
+
+.wall__rail-fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform: scaleX(0);
+  transform-origin: left center;
+  background: linear-gradient(90deg, var(--gold), var(--rose));
+}
+
+/* --------------------------------------------------------------------------
+   Narrow screens, and anyone who has asked for reduced motion, get a natively
+   scrollable strip instead of a pinned horizontal pan.
+   -------------------------------------------------------------------------- */
+@media (max-width: 899px), (prefers-reduced-motion: reduce) {
+  .wall__pin {
+    height: auto;
+    display: block;
+    overflow: visible;
+    padding-block: clamp(1rem, 4vh, 2.5rem);
+  }
+
+  .wall__track {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    /* A swipe that runs off the end of the strip stops there instead of
+       chaining on to the page — and, at the left edge on iOS, on to the
+       browser's own back gesture, which would navigate away mid-album. */
+    overscroll-behavior-x: contain;
+    /* Snap points measured from inside the gutter, so a centred print is
+       centred on the screen rather than on the padding box. */
+    scroll-padding-inline: var(--gutter);
+    padding-block: 2.5rem;
+    gap: 1.25rem;
+    will-change: auto;
+  }
+
+  .postcard {
+    scroll-snap-align: center;
+    transform: rotate(var(--tilt));
+  }
+
+  .postcard:hover,
+  .postcard:focus-within {
+    transform: rotate(var(--tilt));
+  }
+
+  /* Tap feedback, standing in for the hover lift that does not exist here and
+     would otherwise stick to whichever print was tapped last.
+
+     Declared after the hover rule deliberately: a touch tap sets :hover as
+     well as :active, and at equal specificity the later rule is the one that
+     shows. Above it, this would never once be seen. */
+  .postcard:active {
+    transform: rotate(0deg) scale(1.02);
+  }
+
+  .postcard__button img {
+    height: clamp(210px, 46vh, 340px);
+  }
+
+  .postcard__caption {
+    font-size: 1.05rem;
+  }
+
+  /* The rail tracks the GSAP pan, which does not run in this mode. */
+  .wall__rail {
+    display: none;
+  }
+}

@@ -1,0 +1,65 @@
+.ribbon {
+  position: relative;
+  width: 110vw;
+  margin-left: -5vw;
+  padding-block: clamp(1.1rem, 2.6vh, 1.7rem);
+  overflow: hidden;
+  transform: rotate(-1.6deg);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(90deg, rgba(240, 194, 123, 0.04), rgba(233, 160, 168, 0.05));
+}
+
+.ribbon__inner {
+  display: flex;
+  width: max-content;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ribbon__inner {
+    animation: ribbon-scroll 42s linear infinite;
+  }
+
+  .ribbon:hover .ribbon__inner {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes ribbon-scroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    /* Two identical tracks sit side by side, so half the width is exactly one
+       full loop and the seam never shows. */
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.ribbon__track {
+  display: flex;
+  align-items: center;
+  flex: none;
+}
+
+.ribbon__item {
+  display: inline-flex;
+  align-items: center;
+}
+
+.ribbon__text {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.1rem, 2.6vw, 1.9rem);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.ribbon__sep {
+  display: block;
+  width: 7px;
+  height: 7px;
+  margin-inline: clamp(1.5rem, 4vw, 3rem);
+  transform: rotate(45deg);
+  background: var(--line-strong);
+}

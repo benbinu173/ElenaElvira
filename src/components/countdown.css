@@ -1,0 +1,81 @@
+.count {
+  background: linear-gradient(180deg, transparent, var(--ink-800) 40%, transparent);
+}
+
+.count__inner {
+  display: flex;
+  flex-direction: column;
+}
+
+.count__row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: start;
+  width: 100%;
+}
+
+.count__cell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  padding-inline: clamp(0.5rem, 2vw, 1.5rem);
+  perspective: 700px;
+}
+
+/* A hairline between columns, not a full box around every number. */
+.count__rule {
+  position: absolute;
+  left: 0;
+  top: 12%;
+  width: 1px;
+  height: 76%;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    var(--line) 30%,
+    var(--line) 70%,
+    transparent
+  );
+}
+
+.count__value {
+  font-family: var(--font-sans);
+  font-weight: 200;
+  font-size: clamp(2.6rem, 7.4vw, 5.4rem);
+  line-height: 1;
+  letter-spacing: -0.035em;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+  color: var(--cream);
+  display: block;
+}
+
+.count__label {
+  font-size: 0.68rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.count__today {
+  font-size: clamp(2rem, 6vw, 3.4rem);
+  color: var(--gold);
+}
+
+@media (max-width: 640px) {
+  .count__row {
+    grid-template-columns: repeat(2, 1fr);
+    gap: clamp(1.75rem, 7vw, 2.5rem) 0;
+  }
+
+  /* Vertical rules read as stray edges once the grid wraps to two columns. */
+  .count__rule {
+    display: none;
+  }
+
+  .count__value {
+    font-size: clamp(2.4rem, 15vw, 4rem);
+  }
+}
