@@ -151,7 +151,7 @@ nobody on a phone can see is not a present.
 | Twenty-one | The age, in the two of them's colours, and a garland of one light per year. |
 | Together | Counts the other way, from the morning they arrived. |
 | Ribbon | The one marquee on the page. |
-| The wall | Twelve prints, pinned and panned horizontally as you scroll. One arrives blank. |
+| The wall | Every print, pinned and panned horizontally as you scroll. One arrives blank. |
 | Then and now | A drag line between the toddler photo and a recent one. |
 | Candles | One each. Blow them both out and the tune plays. |
 | The board | Notes, and a way to send them to you. |

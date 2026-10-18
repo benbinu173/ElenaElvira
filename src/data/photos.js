@@ -39,6 +39,8 @@ const CAPTIONS = {
   pic10: 'still deciding, still undecided',
   pic15: 'looking at something better than the camera',
   pic14: 'pink walls and one very cold drink',
+  pic16: 'iced coffee, taken extremely seriously',
+  pic17: 'the blue room, neither of you looking at me',
 };
 
 /**
@@ -58,6 +60,10 @@ const ALTS = {
   pic10: 'A second mirrored photo in the same clothes shop',
   pic15: 'A portrait against a pink wall under a round lamp',
   pic14: 'Someone drinking from a cup at a marble table',
+  pic16:
+    'Someone in clear-framed glasses drinking from a tall iced coffee in a pink café with flowers on the wall',
+  pic17:
+    'Two people at a table in a blue restaurant, one in a burgundy top and one in a pale blue shirt',
 };
 
 /**
@@ -77,6 +83,8 @@ const ORDER = [
   'pic10',
   'pic15',
   'pic14',
+  'pic16',
+  'pic17',
 ];
 
 function basename(path) {
